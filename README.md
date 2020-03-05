@@ -6,9 +6,9 @@ Suggested to use with "Pick Up And Haul".
 [RimWorld 1.0 download](https://github.com/DrZhivago1/carry-capacity-fix/releases/tag/v2.0)  
 
 ### Important Info
--- Save-friendly (add or remove)  
--- No known incompatibilities  
+- Save-friendly (add or remove)  
+- No known incompatibilities  
 
 ### Mod Support
-[Alpha Animals](https://steamcommunity.com/sharedfiles/filedetails/?id=1541721856)
-[Boats](https://steamcommunity.com/sharedfiles/filedetails/?id=1931133197)
+[Alpha Animals](https://steamcommunity.com/sharedfiles/filedetails/?id=1541721856)  
+[Boats](https://steamcommunity.com/sharedfiles/filedetails/?id=1931133197)  
