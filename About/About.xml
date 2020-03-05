@@ -6,7 +6,7 @@
 	<supportedVersions>
 		<li>1.1</li>
 	</supportedVersions>
-	<packageId></packageId>
+	<packageId>smashphil.carrycapacityfixed</packageId>
 	<description>
 	The behavior of carry capacity for pawns is 35 kg multiplied by a body type multiplier. This doesn't accurately reflect their "Carrying capacity" stat listed in their basic info.
 	This mod aims to fix that. The carry capacity now accurately affects how much the pawn can haul (best used with the PickUpAndHaul mod).
