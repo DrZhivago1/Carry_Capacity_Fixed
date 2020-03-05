@@ -14,6 +14,10 @@
 			<steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
 		</li>
 	</modDependencies>
+	<loadAfter>
+		<li>Ludeon.RimWorld</li>
+		<li>brrainz.harmony</li>
+	</loadAfter>
 	<description>
 This mod aims to increase pawn carrying capacity in inventory and through caravans.
 	</description>
