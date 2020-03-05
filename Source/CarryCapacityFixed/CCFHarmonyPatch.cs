@@ -16,7 +16,7 @@ namespace CarryCapacityFixed
         static CCFHarmonyPatch()
         {
             var harmonyCCF = new Harmony("smashphil.ccfbutbetter.rimworld");
-            Harmony.DEBUG = true;
+            //Harmony.DEBUG = true;
 
             harmonyCCF.Patch(original: AccessTools.Method(typeof(MassUtility), nameof(MassUtility.Capacity)), prefix: null, postfix: null,
                 transpiler: new HarmonyMethod(typeof(CCFHarmonyPatch), nameof(CarryCapacityChange)));
