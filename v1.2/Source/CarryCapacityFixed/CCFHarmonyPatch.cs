@@ -7,6 +7,7 @@ using RimWorld;
 using Verse;
 using UnityEngine;
 using OpCodes = System.Reflection.Emit.OpCodes;
+using System.Text;
 
 namespace CarryCapacityFixed
 {
@@ -18,44 +19,34 @@ namespace CarryCapacityFixed
             var harmonyCCF = new Harmony("smashphil.ccfbutbetter.rimworld");
             //Harmony.DEBUG = true;
 
-            harmonyCCF.Patch(original: AccessTools.Method(typeof(MassUtility), nameof(MassUtility.Capacity)), prefix: null, postfix: null,
-                transpiler: new HarmonyMethod(typeof(CCFHarmonyPatch), nameof(CarryCapacityChange)));
+            harmonyCCF.Patch(original: AccessTools.Method(typeof(MassUtility), nameof(MassUtility.Capacity)),
+                prefix: new HarmonyMethod(typeof(CCFHarmonyPatch), nameof(CarryCapacityChange)));
         }
 
-        public static IEnumerable<CodeInstruction> CarryCapacityChange(IEnumerable<CodeInstruction> instructions, ILGenerator ilg)
+        public static bool CarryCapacityChange(Pawn p, ref float __result, StringBuilder explanation = null)
         {
-            List<CodeInstruction> instructionList = instructions.ToList();
-
-            for(int i = 0; i < instructionList.Count; i++)
+            if (!p.ContainedWithinDoNotApplyList())
             {
-                CodeInstruction instruction = instructionList[i];
-
-                if(instruction.opcode == OpCodes.Stloc_0)
-                {
-                    //Check if pawn belongs to a def that is allowed to apply the CCF Patch to
-                    Label brlabel = ilg.DefineLabel();
-                    yield return new CodeInstruction(opcode: OpCodes.Ldarg_0);
-                    yield return new CodeInstruction(opcode: OpCodes.Call, operand: AccessTools.Method(typeof(CCFHarmonyPatch), nameof(CCFHarmonyPatch.ContainedWithinDoNotApplyList)));
-                    yield return new CodeInstruction(opcode: OpCodes.Brtrue, brlabel);
-
-                    //Replace formula
-                    yield return new CodeInstruction(opcode: OpCodes.Pop);
-                    yield return new CodeInstruction(opcode: OpCodes.Ldarg_0);
-                    yield return new CodeInstruction(opcode: OpCodes.Call, operand: AccessTools.PropertyGetter(typeof(Pawn), nameof(Pawn.BodySize)));
-                    yield return new CodeInstruction(opcode: OpCodes.Ldarg_0);
-                    yield return new CodeInstruction(opcode: OpCodes.Call, operand: AccessTools.Method(typeof(CCFHarmonyPatch), nameof(CCFHarmonyPatch.GetCarryCapacityShortcut)));
-
-                    yield return new CodeInstruction(opcode: OpCodes.Mul);
-
-                    instruction.labels.Add(brlabel);
-                }
-
-                yield return instruction;
+                if (!MassUtility.CanEverCarryAnything(p))
+			    {
+                    __result = 0f;
+                    return false;
+			    }
+                float num = p.BodySize * p.GetStatValue(StatDefOf.CarryingCapacity);
+			    if (explanation != null)
+			    {
+				    if (explanation.Length > 0)
+				    {
+					    explanation.AppendLine();
+				    }
+				    explanation.Append("  - " + p.LabelShortCap + ": " + num.ToStringMassOffset());
+			    }
+                __result = num;
+                return false;
             }
+            return true;
         }
 
-        public static bool ContainedWithinDoNotApplyList(Pawn p) => p?.def?.HasModExtension<DoNotApply_ModExtension>() ?? true;
-
-        public static float GetCarryCapacityShortcut(Pawn p) => p.GetStatValue(StatDefOf.CarryingCapacity);
+        public static bool ContainedWithinDoNotApplyList(this Pawn p) => p?.def?.HasModExtension<DoNotApply_ModExtension>() ?? true;
     }
 }
